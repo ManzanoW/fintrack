@@ -24,3 +24,14 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* remove outline/foco de todos SVGs e elementos dos charts */
+.recharts-wrapper:focus,
+.recharts-surface:focus,
+.recharts-layer:focus,
+.recharts-sector:focus,
+.recharts-pie:focus,
+svg:focus,
+svg *:focus {
+  outline: none;
+}
