@@ -1,6 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import Header from "../header/Header";
+import { CalendarIcon } from "@heroicons/react/24/outline";
 
 interface Transaction {
   id: number;
@@ -219,7 +220,7 @@ export default function TransactionsPage() {
                 onChange={(e) =>
                   setFormData((f) => ({ ...f, amount: Number(e.target.value) }))
                 }
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm outline-none focus:border-violet-500"
+                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm outline-none focus:border-violet-500 "
               />
             </div>
 
@@ -285,7 +286,7 @@ export default function TransactionsPage() {
               )}
               <button
                 type="submit"
-                className="text-xs px-4 py-2 rounded-lg bg-violet-500 hover:bg-violet-600 text-white font-medium"
+                className="text-xs px-4 py-2 rounded-lg bg-violet-500 hover:bg-violet-600 text-white font-medium hover:cursor-pointer transition"
               >
                 {editingId ? "Salvar" : "Adicionar"}
               </button>
