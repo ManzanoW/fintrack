@@ -10,7 +10,8 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
-import NavBar from "./navBar/NavBar";
+
+import Header from "./header/Header";
 
 interface Transaction {
   id: number;
@@ -222,18 +223,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-50 p-8">
-      <header className="border-b border-zinc-800">
-        <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-violet-500 flex items-center justify-center text-sm font-bold">
-              F
-            </div>
-            <span className="text-xl font-semibold">FinTrack</span>
-          </div>
-
-          <NavBar />
-        </div>
-      </header>
+      <Header />
 
       <div className="flex items-center gap-3 text-sm text-zinc-400 justify-end mt-6">
         <span className="hidden sm:inline">Período:</span>

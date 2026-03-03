@@ -1,6 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
-import NavBar from "../navBar/NavBar";
+import Header from "../header/Header";
 
 interface Transaction {
   id: number;
@@ -172,20 +172,9 @@ export default function TransactionsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-50">
-      <header className="border-b border-zinc-800">
-        <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-violet-500 flex items-center justify-center text-sm font-bold">
-              F
-            </div>
-            <span className="text-xl font-semibold">FinTrack</span>
-          </div>
-          <NavBar />
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-6xl px-6 py-8 space-y-6">
+    <div className="min-h-screen bg-zinc-950 text-zinc-50 p-8">
+      <Header />
+      <main className="mx-auto max-w-6xl px-6 py-6 space-y-2">
         {/* Formulário de nova transação / edição */}
         <section className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 mb-10">
           <div className="flex items-center justify-between mb-3">
@@ -284,7 +273,7 @@ export default function TransactionsPage() {
               />
             </div>
 
-            <div className="md:col-span-1 flex gap-2 justify-end">
+            <div className="md:col-span-1 gap-2 flex justify-end">
               {editingId && (
                 <button
                   type="button"
