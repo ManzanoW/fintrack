@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
+import NavBar from "./navBar/NavBar";
 
 interface Transaction {
   id: number;
@@ -80,7 +81,41 @@ const mockTransactions: Transaction[] = [
     category: "Moradia",
     date: "2026-04-05",
   },
+  {
+    id: 7,
+    description: "Salário",
+    amount: 3000,
+    type: "entrada",
+    category: "Salário",
+    date: "2026-04-10",
+  },
+  {
+    id: 8,
+    description: "Restaurante",
+    amount: -80,
+    type: "saída",
+    category: "Alimentação",
+    date: "2026-05-12",
+  },
+  {
+    id: 9,
+    description: "Academia",
+    amount: -60,
+    type: "saída",
+    category: "Saúde",
+    date: "2026-06-01",
+  },
+  {
+    id: 10,
+    description: "Venda de item usado",
+    amount: 200,
+    type: "entrada",
+    category: "Venda",
+    date: "2026-06-15",
+  },
 ];
+
+type PeriodOption = "3m" | "6m" | "1y" | "all";
 
 const COLORS: string[] = [
   "#f97373", // vermelho suave
@@ -92,18 +127,34 @@ const COLORS: string[] = [
 
 export default function Dashboard() {
   const [transactions] = useState<Transaction[]>(mockTransactions);
+  const [period, setPeriod] = useState<PeriodOption>("3m");
 
-  const totalIn: number = transactions
+  const now = new Date("2026-06-30");
+
+  const getFilteredTransactions = (): Transaction[] => {
+    if (period === "all") return transactions;
+
+    const monthsToSubtract = period === "3m" ? 3 : period === "6m" ? 6 : 12;
+    const start = new Date(
+      now.getFullYear(),
+      now.getMonth() - monthsToSubtract,
+      now.getDate(),
+    );
+
+    return transactions.filter((t) => new Date(t.date) >= start);
+  };
+
+  const totalIn: number = getFilteredTransactions()
     .filter((t) => t.type === "entrada")
     .reduce((acc, t) => acc + t.amount, 0);
   const totalOut: number = Math.abs(
-    transactions
+    getFilteredTransactions()
       .filter((t) => t.type === "saída")
       .reduce((acc, t) => acc + t.amount, 0),
   );
   const balance: number = totalIn - totalOut;
 
-  const categoryData: ChartData[] = transactions
+  const categoryData: ChartData[] = getFilteredTransactions()
     .filter((t) => t.type === "saída")
     .reduce((acc: ChartData[], t) => {
       const existing = acc.find((item) => item.name === t.category);
@@ -137,7 +188,7 @@ export default function Dashboard() {
     dez: 12,
   };
 
-  const monthlyData: MonthlyData[] = transactions
+  const monthlyData: MonthlyData[] = getFilteredTransactions()
     .reduce((acc: MonthlyData[], t) => {
       const [, monthStr] = t.date.split("-");
       const monthIndex = Number(monthStr);
@@ -179,15 +230,32 @@ export default function Dashboard() {
             </div>
             <span className="text-xl font-semibold">FinTrack</span>
           </div>
-          <div className="flex items-center gap-3 text-sm text-zinc-400">
-            <span className="hidden sm:inline">Período:</span>
-            <button className="rounded-full border border-zinc-700 px-3 py-1 hover:border-violet-500 hover:text-zinc-100 transition">
-              Últimos 3 meses
-            </button>
-          </div>
+
+          <NavBar />
         </div>
       </header>
 
+      <div className="flex items-center gap-3 text-sm text-zinc-400 justify-end mt-6">
+        <span className="hidden sm:inline">Período:</span>
+        {[
+          { label: "3 meses", value: "3m" },
+          { label: "6 meses", value: "6m" },
+          { label: "1 ano", value: "1y" },
+          { label: "Todos", value: "all" },
+        ].map((option) => (
+          <button
+            key={option.value}
+            onClick={() => setPeriod(option.value as PeriodOption)}
+            className={`rounded-full px-3 py-1 transition-colors ${
+              period === option.value
+                ? " border-violet-500 bg-violet-500 text-zinc-100"
+                : "border border-zinc-700 hover:border-violet-500 hover:text-zinc-100"
+            }`}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
       {/* Cards de resumo */}
       <main className="mx-auto max-w-6xl px-6 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
