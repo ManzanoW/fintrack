@@ -262,34 +262,37 @@ export default function TransactionsPage() {
               </select>
             </div>
 
-            <div>
-              <label className="block text-xs text-zinc-400 mb-1">Data</label>
-              <input
-                type="date"
-                value={formData.date}
-                onChange={(e) =>
-                  setFormData((f) => ({ ...f, date: e.target.value }))
-                }
-                className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm outline-none focus:border-violet-500"
-              />
-            </div>
+            {/* Data + botão na mesma linha */}
+            <div className="md:col-span-2 flex items-end gap-3 justify-end">
+              <div className="flex-1">
+                <label className="block text-xs text-zinc-400 mb-1">Data</label>
+                <input
+                  type="date"
+                  value={formData.date}
+                  onChange={(e) =>
+                    setFormData((f) => ({ ...f, date: e.target.value }))
+                  }
+                  className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm outline-none focus:border-violet-500"
+                />
+              </div>
 
-            <div className="md:col-span-1 gap-2 flex justify-end">
-              {editingId && (
+              <div className="flex gap-2 ">
+                {editingId && (
+                  <button
+                    type="button"
+                    onClick={resetForm}
+                    className="text-xs px-3 py-2 rounded-lg border border-zinc-700 hover:border-zinc-500 text-zinc-300"
+                  >
+                    Cancelar
+                  </button>
+                )}
                 <button
-                  type="button"
-                  onClick={resetForm}
-                  className="text-xs px-3 py-2 rounded-lg border border-zinc-700 hover:border-zinc-500 text-zinc-300"
+                  type="submit"
+                  className="text-xs px-4 py-2 rounded-lg bg-violet-500 hover:bg-violet-600 text-white font-medium hover:cursor-pointer transition "
                 >
-                  Cancelar
+                  {editingId ? "Salvar" : "Adicionar"}
                 </button>
-              )}
-              <button
-                type="submit"
-                className="text-xs px-4 py-2 rounded-lg bg-violet-500 hover:bg-violet-600 text-white font-medium hover:cursor-pointer transition"
-              >
-                {editingId ? "Salvar" : "Adicionar"}
-              </button>
+              </div>
             </div>
           </form>
         </section>

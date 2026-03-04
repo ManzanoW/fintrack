@@ -226,7 +226,7 @@ export default function Dashboard() {
       <Header />
 
       <div className="flex items-center gap-3 text-sm text-zinc-400 justify-end mt-6">
-        <span className="hidden sm:inline">Período:</span>
+        <span className="hidden sm:inline select-none">Período:</span>
         {[
           { label: "3 meses", value: "3m" },
           { label: "6 meses", value: "6m" },
@@ -247,7 +247,7 @@ export default function Dashboard() {
         ))}
       </div>
       {/* Cards de resumo */}
-      <main className="mx-auto max-w-6xl px-6 py-8">
+      <main className="mx-auto max-w-6xl px-6 py-8 select-none">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-zinc-900/60 border border-zinc-800/40 backdrop-blur-sm p-6 rounded-xl shadow-lg text-left hover:scale-[1.02] transition-shadow hover:shadow-emerald-400/50 hover:border-emerald-400/80">
             <span className="text-xs uppercase tracking-wide text-zinc-500">
@@ -287,7 +287,15 @@ export default function Dashboard() {
               <h2 className="text-sm font-medium text-zinc-200 uppercase tracking-wide">
                 Gastos por Categoria
               </h2>
-              <span className="text-xs text-zinc-500">Este ano</span>
+              <span className="text-xs text-zinc-500">
+                {period === "3m"
+                  ? "Últimos 3 meses"
+                  : period === "6m"
+                    ? "Últimos 6 meses"
+                    : period === "1y"
+                      ? "Último ano"
+                      : "Todo período"}
+              </span>
             </div>
             <ResponsiveContainer width="100%" height={260}>
               <PieChart>
@@ -326,7 +334,16 @@ export default function Dashboard() {
               <h2 className="text-sm font-medium mb-4 text-zinc-200 uppercase tracking-wide">
                 Gastos por Mês
               </h2>
-              <span className="text-xs text-zinc-500">Este ano</span>
+              <span className="text-xs text-zinc-500">
+                {" "}
+                {period === "3m"
+                  ? "Últimos 3 meses"
+                  : period === "6m"
+                    ? "Últimos 6 meses"
+                    : period === "1y"
+                      ? "Último ano"
+                      : "Todo período"}
+              </span>
             </div>
             <ResponsiveContainer width="100%" height={260}>
               <BarChart data={monthlyData}>

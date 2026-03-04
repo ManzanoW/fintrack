@@ -16,7 +16,7 @@ export default function NavBar() {
   };
 
   return (
-    <nav className="flex items-center gap-6 text-sm text-zinc-400">
+    <nav className="flex flex-wrap gap-3 text-sm text-zinc-400">
       <Link
         href="/"
         className={`${linkBase} ${isActive("/") ? linkActive : linkInactive}`}
