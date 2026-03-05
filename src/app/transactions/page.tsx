@@ -173,9 +173,9 @@ export default function TransactionsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-50 p-8">
+    <div className="min-h-screen bg-zinc-950 text-zinc-50 ">
       <Header />
-      <main className="mx-auto max-w-6xl px-6 py-6 space-y-2">
+      <main className="mx-auto max-w-6xl px-4 sm:px-6 py-4 sm:py-6 space-y-4">
         {/* Formulário de nova transação / edição */}
         <section className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 mb-10">
           <div className="flex items-center justify-between mb-3">
@@ -191,7 +191,7 @@ export default function TransactionsPage() {
 
           <form
             onSubmit={handleSubmit}
-            className="grid gap-3 md:grid-cols-6 items-end"
+            className="grid gap-3 sm:gap-4 md:grid-cols-6 items-end"
           >
             {/* 1ª linha: descrição + valor */}
             <div className="md:col-span-3">
@@ -263,7 +263,7 @@ export default function TransactionsPage() {
             </div>
 
             {/* Data + botão na mesma linha */}
-            <div className="md:col-span-2 flex items-end gap-3 justify-end">
+            <div className="md:col-span-2 flex flex-col sm:flex-row sm:items-end gap-2 justify-end">
               <div className="flex-1">
                 <label className="block text-xs text-zinc-400 mb-1">Data</label>
                 <input
@@ -276,7 +276,7 @@ export default function TransactionsPage() {
                 />
               </div>
 
-              <div className="flex gap-2 ">
+              <div className="flex gap-2 justify-end">
                 {editingId && (
                   <button
                     type="button"

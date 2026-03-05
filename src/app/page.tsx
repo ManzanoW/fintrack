@@ -222,7 +222,7 @@ export default function Dashboard() {
     .sort((a, b) => monthOrder[a.month] - monthOrder[b.month]);
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-50 p-8">
+    <div className="min-h-screen bg-zinc-950 text-zinc-50">
       <Header />
 
       <div className="flex items-center gap-3 text-sm text-zinc-400 justify-end mt-6">
