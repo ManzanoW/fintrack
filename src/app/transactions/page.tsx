@@ -375,7 +375,7 @@ export default function TransactionsPage() {
           </div>
         </section>
 
-        {/* Tabela */}
+        {/* Lista de transações */}
         <section className="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-4">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-medium text-zinc-200 uppercase tracking-wide">
@@ -386,7 +386,63 @@ export default function TransactionsPage() {
             </span>
           </div>
 
-          <div className="overflow-x-auto">
+          {/* Mobile: cards */}
+          <div className="space-y-2 sm:hidden">
+            {filteredTransactions.map((t) => (
+              <div
+                key={t.id}
+                className="rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-xs"
+              >
+                <div className="flex justify-between items-center mb-1">
+                  <span className="font-medium text-zinc-100">
+                    {t.description}
+                  </span>
+                  <span
+                    className={`font-semibold ${
+                      t.type === "entrada"
+                        ? "text-emerald-400"
+                        : "text-rose-400"
+                    }`}
+                  >
+                    {t.type === "entrada" ? "+" : "-"} R{" "}
+                    {Math.abs(t.amount).toFixed(2)}
+                  </span>
+                </div>
+                <div className="flex justify-between text-[11px] text-zinc-400">
+                  <span>
+                    {new Date(t.date + "T00:00:00").toLocaleDateString("pt-BR")}
+                  </span>
+                  <span>{t.category}</span>
+                  <span
+                    className={`px-2 py-0.5 rounded-full ${
+                      t.type === "entrada"
+                        ? "bg-emerald-500/10 text-emerald-400"
+                        : "bg-rose-500/10 text-rose-400"
+                    }`}
+                  >
+                    {t.type === "entrada" ? "Entrada" : "Saída"}
+                  </span>
+                </div>
+                <div className="mt-1 flex justify-end">
+                  <button
+                    onClick={() => handleDelete(t.id)}
+                    className="text-[11px] text-zinc-500 hover:text-rose-400"
+                  >
+                    Excluir
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            {filteredTransactions.length === 0 && (
+              <p className="py-4 text-center text-xs text-zinc-500">
+                Nenhuma transação encontrada para os filtros atuais.
+              </p>
+            )}
+          </div>
+
+          {/* Desktop: tabela */}
+          <div className="hidden sm:block overflow-x-auto">
             <table className="min-w-full text-sm">
               <thead>
                 <tr className="border-b border-zinc-800 text-zinc-400">
@@ -429,7 +485,7 @@ export default function TransactionsPage() {
                           : "text-rose-400"
                       }`}
                     >
-                      {t.type === "entrada" ? "+" : "-"} R${" "}
+                      {t.type === "entrada" ? "+" : "-"} R{" "}
                       {Math.abs(t.amount).toFixed(2)}
                     </td>
                     <td className="py-2 px-2 text-right">
@@ -456,8 +512,13 @@ export default function TransactionsPage() {
               </tbody>
             </table>
           </div>
+
           <div
-            className={`mt-4 text-right text-sm ${filteredTransactions.length > 0 ? "text-zinc-200" : "text-zinc-500"} font-medium`}
+            className={`mt-4 text-right text-sm ${
+              filteredTransactions.length > 0
+                ? "text-zinc-200"
+                : "text-zinc-500"
+            } font-medium`}
           >
             Total:{" "}
             {filteredTransactions
