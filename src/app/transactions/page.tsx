@@ -1,7 +1,6 @@
 "use client";
 import { useMemo, useState } from "react";
 import Header from "../header/Header";
-import { CalendarIcon } from "@heroicons/react/24/outline";
 
 interface Transaction {
   id: number;
@@ -76,6 +75,8 @@ const categories = [
 export default function TransactionsPage() {
   const [transactions, setTransactions] =
     useState<Transaction[]>(mockTransactions);
+
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
   const [filters, setFilters] = useState({
     type: "todos", // 'todos' | 'entrada' | 'saída'
@@ -176,12 +177,15 @@ export default function TransactionsPage() {
     <div className="min-h-screen bg-zinc-950 text-zinc-50 ">
       <Header />
       <main className="mx-auto max-w-6xl px-4 sm:px-6 py-4 sm:py-6 space-y-4">
-        {/* Formulário de nova transação / edição */}
+        {/* Formulário de nova transação*/}
         <section className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 mb-10">
-          <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center justify-between mb-2">
             <h2 className="text-sm font-medium text-zinc-100 uppercase tracking-wide">
               {editingId ? "Editar transação" : "Nova transação"}
             </h2>
+            <p className="text-[11px] text-zinc-500 mt-0.5 hidden sm:block">
+              Preencha os campos abaixo para registrar uma movimentação.
+            </p>
             {editingId && (
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/40">
                 Modo edição
@@ -191,7 +195,7 @@ export default function TransactionsPage() {
 
           <form
             onSubmit={handleSubmit}
-            className="grid gap-3 sm:gap-4 md:grid-cols-6 items-end"
+            className="grid gap-3 sm:gap-4 md:grid-cols-5 items-end"
           >
             {/* 1ª linha: descrição + valor */}
             <div className="md:col-span-3">
@@ -205,7 +209,7 @@ export default function TransactionsPage() {
                   setFormData((f) => ({ ...f, description: e.target.value }))
                 }
                 className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm outline-none focus:border-violet-500"
-                placeholder="Ex: Supermercado"
+                placeholder="Ex: Supermercado, Aluguel, Salário..."
               />
             </div>
 
@@ -221,6 +225,7 @@ export default function TransactionsPage() {
                   setFormData((f) => ({ ...f, amount: Number(e.target.value) }))
                 }
                 className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm outline-none focus:border-violet-500 "
+                placeholder="0,00"
               />
             </div>
 
@@ -298,80 +303,97 @@ export default function TransactionsPage() {
         </section>
 
         {/* Filtros */}
-        <section className="bg-zinc-900 border border-zinc-800/80 rounded-xl p-3">
-          <h2 className="text-sm font-medium text-zinc-200 mb-3 uppercase tracking-wide">
-            Filtros
-          </h2>
-          <div className="grid gap-3 md:grid-cols-4">
-            <select
-              value={filters.type}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, type: e.target.value }))
-              }
-              className="bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm outline-none focus:border-violet-500"
-            >
-              <option value="todos">Todos os tipos</option>
-              <option value="entrada">Entradas</option>
-              <option value="saída">Saídas</option>
-            </select>
+        <section className="bg-zinc-900 border border-zinc-800/80 rounded-xl p-0 sm:p-4">
+          {/* Mobile: botão para mostrar/ocultar filtros */}
+          <button
+            type="button"
+            onClick={() => setIsFiltersOpen((prev) => !prev)}
+            className="w-full flex items-center justify-between px-3 py-2 text-sm font-medium uppercase tracking-wide text-zinc-200 sm:cursor-default"
+          >
+            <span>Filtros</span>
+            <span className="text-[11px] text-zinc-500 sm:hidden">
+              {isFiltersOpen ? "Ocultar" : "Mostrar"}
+            </span>
+          </button>
+          {/* Filtros (sempre visíveis no desktop, toggle no mobile) */}
+          <div
+            className={`px-3 pb-3 pt-0 space-y-3 border-t border-zinc-800 ${isFiltersOpen ? "block" : "hidden"} sm:block`}
+          >
+            {/* linha 1: tipo + categoria (quebram em coluna no mobile) */}
+            <div className="grid gap-3 sm:grid-cols-2">
+              <select
+                value={filters.type}
+                onChange={(e) =>
+                  setFilters((f) => ({ ...f, type: e.target.value }))
+                }
+                className="bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm outline-none focus:border-violet-500"
+              >
+                <option value="todos">Todos os tipos</option>
+                <option value="entrada">Entradas</option>
+                <option value="saída">Saídas</option>
+              </select>
 
-            <select
-              value={filters.category}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, category: e.target.value }))
-              }
-              className="bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm outline-none focus:border-violet-500"
-            >
-              {categories.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
+              <select
+                value={filters.category}
+                onChange={(e) =>
+                  setFilters((f) => ({ ...f, category: e.target.value }))
+                }
+                className="bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm outline-none focus:border-violet-500"
+              >
+                {categories.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-            <input
-              type="date"
-              value={filters.startDate}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, startDate: e.target.value }))
-              }
-              className="bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm outline-none focus:border-violet-500"
-            />
+            {/* linha 2: datas */}
+            <div className="grid gap-3 sm:grid-cols-2">
+              <input
+                type="date"
+                value={filters.startDate}
+                onChange={(e) =>
+                  setFilters((f) => ({ ...f, startDate: e.target.value }))
+                }
+                className="bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm outline-none focus:border-violet-500"
+              />
+              <input
+                type="date"
+                value={filters.endDate}
+                onChange={(e) =>
+                  setFilters((f) => ({ ...f, endDate: e.target.value }))
+                }
+                className="bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm outline-none focus:border-violet-500"
+              />
+            </div>
 
-            <input
-              type="date"
-              value={filters.endDate}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, endDate: e.target.value }))
-              }
-              className="bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm outline-none focus:border-violet-500"
-            />
-          </div>
-
-          <div className="mt-3 flex flex-col md:flex-row gap-3 justify-between">
-            <input
-              type="text"
-              placeholder="Buscar por descrição..."
-              value={filters.search}
-              onChange={(e) =>
-                setFilters((f) => ({ ...f, search: e.target.value }))
-              }
-              className="flex-1 bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm outline-none focus:border-violet-500"
-            />
-            <button
-              onClick={() =>
-                setFilters({
-                  type: "todos",
-                  category: "Todos",
-                  startDate: "",
-                  endDate: "",
-                  search: "",
-                })
-              }
-              className="text-sm px-3 py-2 rounded-lg border border-zinc-700 hover:border-violet-500 hover:text-zinc-100 transition"
-            >
-              Limpar filtros
-            </button>
+            {/* linha 3: busca + limpar */}
+            <div className="flex flex-col sm:flex-row gap-3">
+              <input
+                type="text"
+                placeholder="Buscar por descrição..."
+                value={filters.search}
+                onChange={(e) =>
+                  setFilters((f) => ({ ...f, search: e.target.value }))
+                }
+                className="flex-1 bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-sm outline-none focus:border-violet-500"
+              />
+              <button
+                onClick={() =>
+                  setFilters({
+                    type: "todos",
+                    category: "Todos",
+                    startDate: "",
+                    endDate: "",
+                    search: "",
+                  })
+                }
+                className="text-sm px-3 py-2 rounded-lg border border-zinc-700 hover:border-violet-500 hover:text-zinc-100 transition"
+              >
+                Limpar filtros
+              </button>
+            </div>
           </div>
         </section>
 
@@ -404,7 +426,7 @@ export default function TransactionsPage() {
                         : "text-rose-400"
                     }`}
                   >
-                    {t.type === "entrada" ? "+" : "-"} R{" "}
+                    {t.type === "entrada" ? "+" : "-"} R${" "}
                     {Math.abs(t.amount).toFixed(2)}
                   </span>
                 </div>
@@ -485,7 +507,7 @@ export default function TransactionsPage() {
                           : "text-rose-400"
                       }`}
                     >
-                      {t.type === "entrada" ? "+" : "-"} R{" "}
+                      {t.type === "entrada" ? "+" : "-"} R${" "}
                       {Math.abs(t.amount).toFixed(2)}
                     </td>
                     <td className="py-2 px-2 text-right">
