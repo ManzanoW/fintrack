@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Header from "../header/Header";
 
 interface Transaction {
@@ -85,6 +85,8 @@ export default function TransactionsPage() {
     endDate: "",
     search: "",
   });
+
+  const formRef = useRef<HTMLDivElement | null>(null);
 
   // lista filtrada (useMemo só por organização)
   const filteredTransactions = useMemo(() => {
@@ -175,6 +177,11 @@ export default function TransactionsPage() {
       date: t.date,
     });
     setEditingId(t.id);
+
+    // scroll para o topo do formulário (mobile)
+    if (typeof window !== "undefined" && window.innerWidth < 640) {
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   };
 
   const handleDelete = (id: number) => {
@@ -187,7 +194,7 @@ export default function TransactionsPage() {
       <main className="mx-auto max-w-6xl px-4 sm:px-6 py-4 sm:py-6 space-y-4">
         {/* Formulário de nova transação*/}
         <section className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 mb-10">
-          <div className="flex items-center justify-between mb-2">
+          <div ref={formRef} className="flex items-center justify-between mb-2">
             <h2 className="text-sm font-medium text-zinc-100 uppercase tracking-wide">
               {editingId ? "Editar transação" : "Nova transação"}
             </h2>
