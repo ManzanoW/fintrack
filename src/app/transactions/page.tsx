@@ -138,6 +138,9 @@ export default function TransactionsPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const rawAmount = formData.amount;
+    const signedAmount =
+      formData.type === "entrada" ? Math.abs(rawAmount) : -Math.abs(rawAmount);
 
     if (!formData.description || !formData.date || formData.amount === 0) {
       alert("Preencha todos os campos corretamente.");
@@ -147,12 +150,17 @@ export default function TransactionsPage() {
     if (editingId) {
       setTransactions((prev) =>
         prev.map((t) =>
-          t.id === editingId ? { ...formData, id: editingId } : t,
+          t.id === editingId
+            ? { ...formData, id: editingId, amount: signedAmount }
+            : t,
         ),
       );
     } else {
       const newId = Math.max(0, ...transactions.map((t) => t.id)) + 1;
-      setTransactions((prev) => [...prev, { ...formData, id: newId }]);
+      setTransactions((prev) => [
+        ...prev,
+        { ...formData, id: newId, amount: signedAmount },
+      ]);
     }
 
     resetForm();
@@ -161,7 +169,7 @@ export default function TransactionsPage() {
   const handleEdit = (t: Transaction) => {
     setFormData({
       description: t.description,
-      amount: t.amount,
+      amount: Math.abs(t.amount),
       type: t.type,
       category: t.category,
       date: t.date,
@@ -183,13 +191,14 @@ export default function TransactionsPage() {
             <h2 className="text-sm font-medium text-zinc-100 uppercase tracking-wide">
               {editingId ? "Editar transação" : "Nova transação"}
             </h2>
-            <p className="text-[11px] text-zinc-500 mt-0.5 hidden sm:block">
-              Preencha os campos abaixo para registrar uma movimentação.
-            </p>
-            {editingId && (
+            {(editingId && (
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/40">
                 Modo edição
               </span>
+            )) || (
+              <p className="text-[11px] text-zinc-500 mt-0.5 hidden sm:block">
+                Preencha os campos abaixo para registrar uma movimentação.
+              </p>
             )}
           </div>
 
@@ -222,7 +231,10 @@ export default function TransactionsPage() {
                 step="0.01"
                 value={formData.amount === 0 ? "" : formData.amount}
                 onChange={(e) =>
-                  setFormData((f) => ({ ...f, amount: Number(e.target.value) }))
+                  setFormData((f) => ({
+                    ...f,
+                    amount: Math.abs(Number(e.target.value)) || 0,
+                  }))
                 }
                 className="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2 text-sm outline-none focus:border-violet-500 "
                 placeholder="0,00"
@@ -447,6 +459,12 @@ export default function TransactionsPage() {
                 </div>
                 <div className="mt-1 flex justify-end">
                   <button
+                    onClick={() => handleEdit(t)}
+                    className="text-[11px] text-zinc-500 hover:text-emerald-400 mr-4"
+                  >
+                    Editar
+                  </button>
+                  <button
                     onClick={() => handleDelete(t.id)}
                     className="text-[11px] text-zinc-500 hover:text-rose-400"
                   >
@@ -511,6 +529,12 @@ export default function TransactionsPage() {
                       {Math.abs(t.amount).toFixed(2)}
                     </td>
                     <td className="py-2 px-2 text-right">
+                      <button
+                        onClick={() => handleEdit(t)}
+                        className="text-xs text-zinc-400 hover:text-emerald-400 mr-4"
+                      >
+                        Editar
+                      </button>
                       <button
                         onClick={() => handleDelete(t.id)}
                         className="text-xs text-zinc-400 hover:text-rose-400"
