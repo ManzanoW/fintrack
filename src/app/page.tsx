@@ -225,8 +225,8 @@ export default function Dashboard() {
     <div className="min-h-screen bg-zinc-950 text-zinc-50">
       <Header />
 
-      <div className="flex items-center gap-3 text-sm text-zinc-400 justify-end mt-6">
-        <span className="hidden sm:inline select-none">Período:</span>
+      <div className="flex justify-center gap-3 text-sm text-zinc-400 mt-6 ">
+        <span className="hidden sm:inline select-none ">Período:</span>
         {[
           { label: "3 meses", value: "3m" },
           { label: "6 meses", value: "6m" },
@@ -248,29 +248,29 @@ export default function Dashboard() {
       </div>
       {/* Cards de resumo */}
       <main className="mx-auto max-w-6xl px-6 py-8 select-none">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-zinc-900/60 border border-zinc-800/40 backdrop-blur-sm p-6 rounded-xl shadow-lg text-left hover:scale-[1.02] transition-shadow hover:shadow-emerald-400/50 hover:border-emerald-400/80">
-            <span className="text-xs uppercase tracking-wide text-zinc-500">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8">
+          <div className="bg-zinc-900/60 border border-zinc-800/40 backdrop-blur-sm px-4 py-3 sm:p6 rounded-xl shadow-lg text-center sm:text-left hover:scale-[1.02] transition-shadow hover:shadow-emerald-400/50 hover:border-emerald-400/80">
+            <span className="text-[11px] uppercase tracking-wide text-zinc-500">
               Entradas
             </span>
-            <p className="mt-2 text-2xl font-semibold text-emerald-400">
+            <p className="mt-1 text-2xl font-semibold text-emerald-400">
               R$ {totalIn.toFixed(2)}
             </p>
           </div>
-          <div className="bg-zinc-900/60 border border-zinc-800/40 backdrop-blur-sm p-6 rounded-xl shadow-lg text-left hover:scale-[1.02] transition-shadow hover:shadow-rose-400/50 hover:border-rose-400/80">
-            <span className="text-xs uppercase tracking-wide text-zinc-500">
+          <div className="bg-zinc-900/60 border border-zinc-800/40 backdrop-blur-sm p-2 sm:p6 rounded-xl shadow-lg text-center sm:text-left hover:scale-[1.02] transition-shadow hover:shadow-rose-400/50 hover:border-rose-400/80">
+            <span className="text-[11px] uppercase tracking-wide text-zinc-500">
               Saídas
             </span>
-            <p className="mt-2 text-2xl font-semibold text-rose-400">
+            <p className="mt-1 text-2xl font-semibold text-rose-400">
               R$ {totalOut.toFixed(2)}
             </p>
           </div>
-          <div className="bg-zinc-900/60 border border-zinc-800/40 backdrop-blur-sm p-6 rounded-xl shadow-lg text-left hover:scale-[1.02] transition-shadow hover:shadow-sky-400/50 hover:border-sky-400/80">
-            <span className="text-xs uppercase tracking-wide text-zinc-500">
+          <div className="bg-zinc-900/60 border border-zinc-800/40 backdrop-blur-sm p-2 sm:p6 rounded-xl shadow-lg text-center sm:text-left hover:scale-[1.02] transition-shadow hover:shadow-sky-400/50 hover:border-sky-400/80">
+            <span className="text-[11px] uppercase tracking-wide text-zinc-500">
               Saldo
             </span>
             <p
-              className={`mt-2 text-2xl font-semibold ${
+              className={`mt-1 text-2xl font-semibold ${
                 balance >= 0 ? "text-sky-400" : "text-rose-400"
               }`}
             >
@@ -280,14 +280,14 @@ export default function Dashboard() {
         </div>
 
         {/* Gráficos */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="space-y-4 lg:grid lg:grid-cols-2 lg:gap-6 lg:space-y-0">
           {/* Pizza por categoria */}
-          <div className="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-5 hover:scale-[1.02] transition-transform hover:border-violet-500/40 hover:shadow-violet-400/50 hover:shadow-lg">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-medium text-zinc-200 uppercase tracking-wide">
+          <div className="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-4 h-72 lg:h-80 hover:scale-[1.02] transition-transform hover:border-violet-500/40 hover:shadow-violet-400/50 hover:shadow-lg">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-xs font-medium text-zinc-200 uppercase tracking-wide">
                 Gastos por Categoria
               </h2>
-              <span className="text-xs text-zinc-500">
+              <span className="text-[11px] text-zinc-500">
                 {period === "3m"
                   ? "Últimos 3 meses"
                   : period === "6m"
@@ -297,7 +297,7 @@ export default function Dashboard() {
                       : "Todo período"}
               </span>
             </div>
-            <ResponsiveContainer width="100%" height={260}>
+            <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Tooltip
                   contentStyle={{
@@ -329,12 +329,13 @@ export default function Dashboard() {
           </div>
 
           {/* Barras por mês */}
-          <div className="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-5 hover:scale-[1.02] transition-transform hover:border-violet-500/40 hover:shadow-violet-400/50 hover:shadow-lg">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-sm font-medium mb-4 text-zinc-200 uppercase tracking-wide">
+          <div className="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-4 h-72 lg:h-80
+           hover:scale-[1.02] transition-transform hover:border-violet-500/40 hover:shadow-violet-400/50 hover:shadow-lg">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-xs font-medium text-zinc-200 uppercase tracking-wide">
                 Gastos por Mês
               </h2>
-              <span className="text-xs text-zinc-500">
+              <span className="text-[11px] text-zinc-500">
                 {" "}
                 {period === "3m"
                   ? "Últimos 3 meses"
@@ -345,7 +346,7 @@ export default function Dashboard() {
                       : "Todo período"}
               </span>
             </div>
-            <ResponsiveContainer width="100%" height={260}>
+            <ResponsiveContainer width="100%" height="100%">
               <BarChart data={monthlyData}>
                 <Tooltip
                   cursor={{ fill: "transparent" }}

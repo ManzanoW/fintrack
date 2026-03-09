@@ -2,8 +2,8 @@ import NavBar from "../navBar/NavBar";
 
 export default function Header() {
   return (
-    <header className="border-b border-zinc-800">
-      <div className="mx-auto max-w-6xl px-4 py-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <header className="border-b border-zinc-800 bg-zinc-900/60 backdrop-blur-sm  w-full z-10">
+      <div className="mx-auto max-w-6xl px-4 py-3 flex flex-col  gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-lg bg-violet-500 flex items-center justify-center text-sm font-bold select-none">
             F
@@ -13,7 +13,7 @@ export default function Header() {
           </span>
         </div>
 
-        <div className="flex justify-start sm:justify-end">
+        <div className="flex  sm:justify-end">
           <NavBar />
         </div>
       </div>
