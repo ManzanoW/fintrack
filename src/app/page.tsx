@@ -12,6 +12,8 @@ import {
 } from "recharts";
 
 import Header from "./header/Header";
+import { CategoriesTab } from "./categories/page";
+
 
 interface Transaction {
   id: number;
@@ -329,8 +331,10 @@ export default function Dashboard() {
           </div>
 
           {/* Barras por mês */}
-          <div className="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-4 h-72 lg:h-80
-           hover:scale-[1.02] transition-transform hover:border-violet-500/40 hover:shadow-violet-400/50 hover:shadow-lg">
+          <div
+            className="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-4 h-72 lg:h-80
+           hover:scale-[1.02] transition-transform hover:border-violet-500/40 hover:shadow-violet-400/50 hover:shadow-lg"
+          >
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-xs font-medium text-zinc-200 uppercase tracking-wide">
                 Gastos por Mês

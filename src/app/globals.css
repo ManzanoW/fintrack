@@ -31,6 +31,7 @@ body {
 .recharts-layer:focus,
 .recharts-sector:focus,
 .recharts-pie:focus,
+.recharts-bar:focus,
 svg:focus,
 svg *:focus {
   outline: none;

@@ -13,7 +13,7 @@ export default function Header() {
           </span>
         </div>
 
-        <div className="flex  sm:justify-end">
+        <div className="flex sm:justify-end">
           <NavBar />
         </div>
       </div>
