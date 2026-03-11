@@ -12,8 +12,6 @@ import {
 } from "recharts";
 
 import Header from "./header/Header";
-import { CategoriesTab } from "./categories/page";
-
 
 interface Transaction {
   id: number;
