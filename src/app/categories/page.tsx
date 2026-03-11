@@ -17,6 +17,13 @@ export default function CategoriesPage() {
   const transactions: Transaction[] = mockTransactions;
 
   const categories = useMemo(() => {
+    const categoryBudgets: Record<string, number> = {
+      Alimentação: 500,
+      Transporte: 300,
+      Lazer: 300,
+      Moradia: 1500,
+    };
+
     const map = new Map<string, { total: number; count: number }>();
 
     transactions.forEach((t) => {
@@ -31,10 +38,17 @@ export default function CategoriesPage() {
       });
     });
 
-    const arr = Array.from(map.entries()).map(([name, data]) => ({
-      name,
-      ...data,
-    }));
+    const arr = Array.from(map.entries()).map(([name, data]) => {
+      const budget = categoryBudgets[name] ?? 0;
+      const progress = budget ? (data.total / budget) * 100 : 0;
+
+      return {
+        name,
+        ...data,
+        budget,
+        progress,
+      };
+    });
 
     const grandTotal = arr.reduce((sum, c) => sum + c.total, 0);
 
@@ -46,7 +60,7 @@ export default function CategoriesPage() {
       .sort((a, b) => b.total - a.total);
   }, [transactions]);
 
-  const periodLabel = "Período completo"; // depois você pode ligar com filtros globais
+  const periodLabel = "Período completo";
 
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-50">
@@ -85,16 +99,25 @@ export default function CategoriesPage() {
                     color: "#fafafa",
                     padding: "0.5rem 0.75rem",
                   }}
-                  formatter={(value: number | string | undefined) => {
+                  formatter={(value: number | string | undefined, name) => {
                     const n = Number(value ?? 0);
-                    return `R$ ${n.toFixed(2)}`;
+                    return [
+                      `R$ ${n.toFixed(2)}`,
+                      name === "total" ? "Gasto" : "Orçamento",
+                    ];
                   }}
+                />
+                <Bar
+                  dataKey="budget"
+                  fill="#3f3f46"
+                  radius={[0, 4, 4, 0]}
+                  barSize={18}
                 />
                 <Bar
                   dataKey="total"
                   fill="#8b5cf6"
                   radius={[0, 4, 4, 0]}
-                  barSize={18}
+                  barSize={10}
                 />
               </BarChart>
             </ResponsiveContainer>
@@ -106,21 +129,73 @@ export default function CategoriesPage() {
           {categories.map((cat) => (
             <div
               key={cat.name}
-              className="flex items-center justify-between bg-zinc-900/60 border border-zinc-800/70 rounded-xl px-4 py-3"
+              className="bg-zinc-900/60 border border-zinc-800/70 rounded-xl px-4 py-3 space-y-2"
             >
-              <div>
-                <p className="text-sm font-medium text-zinc-100">{cat.name}</p>
-                <p className="text-xs text-zinc-500">
-                  {cat.count} transação{cat.count > 1 ? "es" : ""}
-                </p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-zinc-100">
+                    {cat.name}
+                  </p>
+                  <p className="text-xs text-zinc-500">
+                    {cat.count} transação{cat.count > 1 ? "es" : ""}
+                  </p>
+                </div>
+
+                <div className="text-right text-xs">
+                  {cat.budget > 0 && (
+                    <p className="text-zinc-400">
+                      Orçamento:{" "}
+                      <span className="text-zinc-100">
+                        R$ {cat.budget.toFixed(2)}
+                      </span>
+                    </p>
+                  )}
+                  <p
+                    className={
+                      cat.budget > 0 && cat.total > cat.budget
+                        ? "text-rose-400"
+                        : "text-zinc-500"
+                    }
+                  >
+                    Usado:{" "}
+                    <span
+                      className={
+                        cat.budget > 0 && cat.total > cat.budget
+                          ? "text-sm font-semibold text-rose-400"
+                          : "text-sm font-medium text-emerald-400"
+                      }
+                    >
+                      {" "}
+                      R$ {cat.total.toFixed(2)}
+                    </span>
+                  </p>
+                </div>
               </div>
-              <div className="text-right">
-                <p className="text-sm font-semibold text-rose-400">
-                  R$ {cat.total.toFixed(2)}
-                </p>
-                <p className="text-xs text-zinc-500">
-                  {cat.percent.toFixed(1)}%
-                </p>
+
+              {cat.budget > 0 && (
+                <div className="h-1.5 w-full rounded-full bg-zinc-800 overflow-hidden">
+                  <div
+                    className={`h-full rounded-full ${
+                      cat.progress < 80
+                        ? "bg-emerald-500"
+                        : cat.progress <= 100
+                          ? "bg-amber-400"
+                          : "bg-rose-500"
+                    }`}
+                    style={{ width: `${Math.min(cat.progress, 100)}%` }}
+                  />
+                </div>
+              )}
+
+              <div className="flex justify-between text-[11px] text-zinc-500">
+                <span>{cat.percent.toFixed(1)}% das saídas</span>
+                {cat.budget > 0 && (
+                  <span>
+                    {cat.total <= cat.budget
+                      ? `Restante: R$ ${(cat.budget - cat.total).toFixed(2)}`
+                      : `Estourou em R$ ${(cat.total - cat.budget).toFixed(2)}`}
+                  </span>
+                )}
               </div>
             </div>
           ))}
