@@ -14,6 +14,7 @@ import {
 
 import Header from "./header/Header";
 import { OverviewInsights } from "@/components/OverviewInsights";
+import { Link } from "react-router-dom";
 
 interface Transaction {
   id: number;
@@ -313,6 +314,14 @@ export default function Dashboard() {
                       : "Todo período"}
               </span>
             </div>
+            <div className="flex justify-end">
+              <a
+                href="/categories"
+                className="text-xs px-3 py-1.5 rounded-lg border border-zinc-700 hover:border-violet-500 text-zinc-400 hover:text-violet-400 transition"
+              >
+                Ver categorias em detalhes →
+              </a>
+            </div>
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Tooltip
@@ -364,7 +373,16 @@ export default function Dashboard() {
                       : "Todo período"}
               </span>
             </div>
-            <ResponsiveContainer width="100%" height="100%">
+            <div className="flex justify-end">
+              <a
+                href="/transactions"
+                className="text-xs px-3 py-1.5 rounded-lg border border-zinc-700 hover:border-violet-500 text-zinc-400 hover:text-violet-400 transition"
+              >
+                Ver todas as transações →
+              </a>
+            </div>
+
+            <ResponsiveContainer width="100%" height="90%">
               <BarChart data={monthlyData}>
                 <Tooltip
                   cursor={{ fill: "transparent" }}
