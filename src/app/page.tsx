@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { usePeriod } from "@/context/PeriodContext";
 import {
   PieChart,
   Pie,
@@ -12,6 +13,7 @@ import {
 } from "recharts";
 
 import Header from "./header/Header";
+import { OverviewInsights } from "@/components/OverviewInsights";
 
 interface Transaction {
   id: number;
@@ -128,7 +130,7 @@ const COLORS: string[] = [
 
 export default function Dashboard() {
   const [transactions] = useState<Transaction[]>(mockTransactions);
-  const [period, setPeriod] = useState<PeriodOption>("3m");
+  const { period, setPeriod } = usePeriod();
 
   const now = new Date("2026-06-30");
 
@@ -249,32 +251,46 @@ export default function Dashboard() {
       {/* Cards de resumo */}
       <main className="mx-auto max-w-6xl px-6 py-8 select-none">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8">
-          <div className="bg-zinc-900/60 border border-zinc-800/40 backdrop-blur-sm px-4 py-3 sm:p6 rounded-xl shadow-lg text-center sm:text-left hover:scale-[1.02] transition-shadow hover:shadow-emerald-400/50 hover:border-emerald-400/80">
-            <span className="text-[11px] uppercase tracking-wide text-zinc-500">
+          <div className="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-5 sm:p-6 hover:border-emerald-400">
+            <span className="text-xs uppercase tracking-wide text-zinc-500">
               Entradas
             </span>
-            <p className="mt-1 text-2xl font-semibold text-emerald-400">
-              R$ {totalIn.toFixed(2)}
-            </p>
+            <div className="sm:mt-3 flex items-end gap-2">
+              <p className="text-2xl sm:text-3xl font-semibold text-emerald-400">
+                R$ {totalIn.toFixed(2)}
+              </p>
+            </div>
           </div>
-          <div className="bg-zinc-900/60 border border-zinc-800/40 backdrop-blur-sm p-2 sm:p6 rounded-xl shadow-lg text-center sm:text-left hover:scale-[1.02] transition-shadow hover:shadow-rose-400/50 hover:border-rose-400/80">
-            <span className="text-[11px] uppercase tracking-wide text-zinc-500">
+          <div className="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-5 sm:p-6 hover:border-rose-400">
+            <span className="text-xs uppercase tracking-wide text-zinc-500">
               Saídas
             </span>
-            <p className="mt-1 text-2xl font-semibold text-rose-400">
-              R$ {totalOut.toFixed(2)}
-            </p>
+            <div className="sm:mt-3 flex items-end gap-2 ">
+              <p className="text-2xl sm:text-3xl font-semibold text-rose-400">
+                R$ {totalOut.toFixed(2)}
+              </p>
+            </div>
           </div>
-          <div className="bg-zinc-900/60 border border-zinc-800/40 backdrop-blur-sm p-2 sm:p6 rounded-xl shadow-lg text-center sm:text-left hover:scale-[1.02] transition-shadow hover:shadow-sky-400/50 hover:border-sky-400/80">
-            <span className="text-[11px] uppercase tracking-wide text-zinc-500">
+          <div className="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-5 sm:p-6 hover:border-sky-400">
+            <span className="text-xs uppercase tracking-wide text-zinc-500">
               Saldo
             </span>
+            <div className="sm:mt-3 flex items-end gap-2">
+              <p className="text-2xl sm:text-3xl font-semibold text-sky-400">
+                R$ {balance.toFixed(2)}
+              </p>
+              {balance >= 0 ? (
+                <span className="text-2xl text-emerald-400 mb-1">↗️</span>
+              ) : (
+                <span className="text-2xl text-rose-400 mb-1">↘️</span>
+              )}
+            </div>
             <p
-              className={`mt-1 text-2xl font-semibold ${
-                balance >= 0 ? "text-sky-400" : "text-rose-400"
+              className={`text-xs mt-2 ${
+                balance >= 0 ? "text-emerald-500" : "text-rose-500"
               }`}
             >
-              R$ {balance.toFixed(2)}
+              {balance >= 0 ? "✓ Situação positiva" : "⚠ Saldo negativo"}
             </p>
           </div>
         </div>
@@ -374,6 +390,7 @@ export default function Dashboard() {
             </ResponsiveContainer>
           </div>
         </div>
+        <OverviewInsights transactions={getFilteredTransactions()} />
       </main>
     </div>
   );
