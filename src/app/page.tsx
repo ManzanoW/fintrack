@@ -14,7 +14,7 @@ import {
 
 import Header from "./header/Header";
 import { OverviewInsights } from "@/components/OverviewInsights";
-import { Link } from "react-router-dom";
+import { RecentTransactions } from "@/components/RecentTransactions";
 
 interface Transaction {
   id: number;
@@ -409,6 +409,7 @@ export default function Dashboard() {
           </div>
         </div>
         <OverviewInsights transactions={getFilteredTransactions()} />
+        <RecentTransactions transactions={getFilteredTransactions()} />
       </main>
     </div>
   );
