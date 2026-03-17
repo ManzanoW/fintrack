@@ -35,6 +35,12 @@ export default function NavBar() {
       >
         Categorias
       </Link>
+      <Link
+        href="/goals"
+        className={`${linkBase} ${isActive("/goals") ? linkActive : linkInactive}`}
+      >
+        Metas
+      </Link>
     </nav>
   );
 }

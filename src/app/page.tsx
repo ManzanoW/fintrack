@@ -15,6 +15,7 @@ import {
 import Header from "./header/Header";
 import { OverviewInsights } from "@/components/OverviewInsights";
 import { RecentTransactions } from "@/components/RecentTransactions";
+import { SavingsGoalsOverview } from "@/components/SavingGoalsOverview";
 
 interface Transaction {
   id: number;
@@ -298,61 +299,6 @@ export default function Dashboard() {
 
         {/* Gráficos */}
         <div className="space-y-4 lg:grid lg:grid-cols-2 lg:gap-6 lg:space-y-0">
-          {/* Pizza por categoria */}
-          <div className="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-4 h-72 lg:h-80 hover:scale-[1.02] transition-transform hover:border-violet-500/40 hover:shadow-violet-400/50 hover:shadow-lg">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-xs font-medium text-zinc-200 uppercase tracking-wide">
-                Gastos por Categoria
-              </h2>
-              <span className="text-[11px] text-zinc-500">
-                {period === "3m"
-                  ? "Últimos 3 meses"
-                  : period === "6m"
-                    ? "Últimos 6 meses"
-                    : period === "1y"
-                      ? "Último ano"
-                      : "Todo período"}
-              </span>
-            </div>
-            <div className="flex justify-end">
-              <a
-                href="/categories"
-                className="text-xs px-3 py-1.5 rounded-lg border border-zinc-700 hover:border-violet-500 text-zinc-400 hover:text-violet-400 transition"
-              >
-                Ver categorias em detalhes →
-              </a>
-            </div>
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "#27272a", // mais claro que o fundo
-                    border: "1px solid #3f3f46",
-                    borderRadius: "0.5rem",
-                    color: "#f9fafb",
-                    padding: "0.5rem 0.75rem",
-                  }}
-                  itemStyle={{
-                    color: "#f9fafb",
-                  }}
-                  formatter={(value: number | string | undefined, name) => {
-                    const n = Number(value ?? 0);
-                    return [`R$ ${n.toFixed(2)}`, String(name)];
-                  }}
-                />
-
-                <Pie
-                  data={categoryDataWithColor}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={80}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-
           {/* Barras por mês */}
           <div
             className="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-4 h-72 lg:h-80
@@ -407,8 +353,68 @@ export default function Dashboard() {
               </BarChart>
             </ResponsiveContainer>
           </div>
+
+          {/* Pizza por categoria */}
+          <div className="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-4 h-72 lg:h-80 hover:scale-[1.02] transition-transform hover:border-violet-500/40 hover:shadow-violet-400/50 hover:shadow-lg">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-xs font-medium text-zinc-200 uppercase tracking-wide">
+                Gastos por Categoria
+              </h2>
+              <span className="text-[11px] text-zinc-500">
+                {period === "3m"
+                  ? "Últimos 3 meses"
+                  : period === "6m"
+                    ? "Últimos 6 meses"
+                    : period === "1y"
+                      ? "Último ano"
+                      : "Todo período"}
+              </span>
+            </div>
+            <div className="flex justify-end">
+              <a
+                href="/categories"
+                className="text-xs px-3 py-1.5 rounded-lg border border-zinc-700 hover:border-violet-500 text-zinc-400 hover:text-violet-400 transition"
+              >
+                Ver categorias em detalhes →
+              </a>
+            </div>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#27272a", // mais claro que o fundo
+                    border: "1px solid #3f3f46",
+                    borderRadius: "0.5rem",
+                    color: "#f9fafb",
+                    padding: "0.5rem 0.75rem",
+                  }}
+                  itemStyle={{
+                    color: "#f9fafb",
+                  }}
+                  formatter={(value: number | string | undefined, name) => {
+                    const n = Number(value ?? 0);
+                    return [`R$ ${n.toFixed(2)}`, String(name)];
+                  }}
+                />
+
+                <Pie
+                  data={categoryDataWithColor}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         </div>
+
+        {/* Insights */}
         <OverviewInsights transactions={getFilteredTransactions()} />
+        {/* Objetivos */}
+        <SavingsGoalsOverview />
+        {/* Últimas transações */}
         <RecentTransactions transactions={getFilteredTransactions()} />
       </main>
     </div>
