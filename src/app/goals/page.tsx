@@ -70,6 +70,14 @@ export default function GoalsPage() {
     setGoals((prev) => prev.filter((g) => g.id !== id));
   };
 
+  const handleToggleForm = () => {
+    if (isFormOpen) {
+      resetForm();
+    } else {
+      setIsFormOpen(true);
+    }
+  };
+
   const completedGoals = goals.filter((g) => g.currentAmount >= g.targetAmount);
   const activeGoals = goals.filter((g) => g.currentAmount < g.targetAmount);
 
@@ -116,7 +124,7 @@ export default function GoalsPage() {
 
             {/* Botão Nova Meta */}
             <button
-              onClick={() => setIsFormOpen(!isFormOpen)}
+              onClick={handleToggleForm}
               className="w-full px-4 py-2 rounded-lg bg-violet-500 hover:bg-violet-600 text-white text-sm font-medium transition"
             >
               {isFormOpen ? "Cancelar" : "+ Nova Meta"}
