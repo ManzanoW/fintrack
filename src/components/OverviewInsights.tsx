@@ -49,7 +49,7 @@ export function OverviewInsights({ transactions }: OverviewInsightsProps) {
         <p className="flex items-center gap-3 text-zinc-300">
           <span className="text-lg">💡</span>
           <span>
-            Você economizou{" "}
+            Você guardou{" "}
             <span
               className={`font-bold ${
                 savings >= 0 ? "text-emerald-400" : "text-rose-400"

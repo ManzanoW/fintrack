@@ -118,6 +118,22 @@ const mockTransactions: Transaction[] = [
     category: "Venda",
     date: "2026-06-15",
   },
+  {
+    id: 11,
+    description: "Compras",
+    amount: 80,
+    type: "saída",
+    category: "Alimentação",
+    date: "2026-03-14",
+  },
+  {
+    id: 12,
+    description: "Venda de memória ram",
+    amount: 300,
+    type: "entrada",
+    category: "Venda",
+    date: "2026-06-15",
+  },
 ];
 
 type PeriodOption = "3m" | "6m" | "1y" | "all";
