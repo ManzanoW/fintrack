@@ -3,6 +3,7 @@ import { useMemo, useRef, useState } from "react";
 import Header from "../header/Header";
 import { mockTransactions } from "@/lib/transactions";
 import { Transaction } from "@/lib/transactions";
+import { useToast } from "@/components/Toast";
 
 const categories = [
   "Todos",
@@ -13,6 +14,23 @@ const categories = [
   "Salário",
   "Freelance",
 ];
+
+function SortIcon({
+  field,
+  sortField,
+  sortDir,
+}: {
+  field: string;
+  sortField: string;
+  sortDir: "asc" | "desc";
+}) {
+  if (sortField !== field) return <span className="text-zinc-600 ml-1">↕</span>;
+  return (
+    <span className="text-violet-400 ml-1">
+      {sortDir === "asc" ? "↑" : "↓"}
+    </span>
+  );
+}
 
 export default function TransactionsPage() {
   const [transactions, setTransactions] =
@@ -59,6 +77,39 @@ export default function TransactionsPage() {
     });
   }, [transactions, filters]);
 
+  type SortField = "date" | "description" | "amount" | "category";
+  type SortDir = "asc" | "desc";
+
+  const [sortField, setSortField] = useState<SortField>("date");
+  const [sortDir, setSortDir] = useState<SortDir>("desc");
+
+  const handleSort = (field: SortField) => {
+    if (field === sortField) {
+      setSortDir(sortDir === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDir("asc");
+    }
+  };
+
+  const sortedTransactions = useMemo(() => {
+    return [...filteredTransactions].sort((a, b) => {
+      let comparison = 0;
+
+      if (sortField === "date") {
+        comparison = new Date(a.date).getTime() - new Date(b.date).getTime();
+      } else if (sortField === "description") {
+        comparison = a.description.localeCompare(b.description);
+      } else if (sortField === "amount") {
+        comparison = Math.abs(a.amount) - Math.abs(b.amount);
+      } else if (sortField === "category") {
+        comparison = a.category.localeCompare(b.category);
+      }
+
+      return sortDir === "asc" ? comparison : -comparison;
+    });
+  }, [filteredTransactions, sortField, sortDir]);
+
   const [editingId, setEditingId] = useState<number | null>(null);
 
   const [formData, setFormData] = useState<Omit<Transaction, "id">>({
@@ -80,6 +131,8 @@ export default function TransactionsPage() {
     setEditingId(null);
   };
 
+  const { addToast } = useToast();
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const rawAmount = formData.amount;
@@ -87,7 +140,7 @@ export default function TransactionsPage() {
       formData.type === "entrada" ? Math.abs(rawAmount) : -Math.abs(rawAmount);
 
     if (!formData.description || !formData.date || formData.amount === 0) {
-      alert("Preencha todos os campos corretamente.");
+      addToast("Preencha todos os campos corretamente.", "error");
       return;
     }
 
@@ -99,12 +152,14 @@ export default function TransactionsPage() {
             : t,
         ),
       );
+      addToast("Transação atualizada com sucesso.", "success");
     } else {
       const newId = Math.max(0, ...transactions.map((t) => t.id)) + 1;
       setTransactions((prev) => [
         ...prev,
         { ...formData, id: newId, amount: signedAmount },
       ]);
+      addToast("Transação adicionada com sucesso.", "success");
     }
 
     resetForm();
@@ -120,6 +175,11 @@ export default function TransactionsPage() {
     });
     setEditingId(t.id);
 
+    // scroll para o topo do formulário (desktop)
+    if (typeof window !== "undefined" && window.innerWidth >= 640) {
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
     // scroll para o topo do formulário (mobile)
     if (typeof window !== "undefined" && window.innerWidth < 640) {
       formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -128,6 +188,7 @@ export default function TransactionsPage() {
 
   const handleDelete = (id: number) => {
     setTransactions((prev) => prev.filter((t) => t.id !== id));
+    addToast("Transação excluida com sucesso.", "info");
   };
 
   return (
@@ -435,16 +496,59 @@ export default function TransactionsPage() {
             <table className="min-w-full text-sm">
               <thead>
                 <tr className="border-b border-zinc-800 text-zinc-400">
-                  <th className="py-2 px-2 text-left">Data</th>
-                  <th className="py-2 px-2 text-left">Descrição</th>
-                  <th className="py-2 px-2 text-left">Categoria</th>
+                  <th
+                    onClick={() => handleSort("date")}
+                    className="py-2 px-2 text-left cursor-pointer hover:text-zinc-100 select-none transition-colors"
+                  >
+                    Data{" "}
+                    <SortIcon
+                      field="date"
+                      sortField={sortField}
+                      sortDir={sortDir}
+                    />
+                  </th>
+
+                  <th
+                    onClick={() => handleSort("description")}
+                    className="py-2 px-2 text-left cursor-pointer hover:text-zinc-100 select-none transition-colors"
+                  >
+                    Descrição{" "}
+                    <SortIcon
+                      field="description"
+                      sortField={sortField}
+                      sortDir={sortDir}
+                    />
+                  </th>
+
+                  <th
+                    onClick={() => handleSort("category")}
+                    className="py-2 px-2 text-left cursor-pointer hover:text-zinc-100 select-none transition-colors"
+                  >
+                    Categoria{" "}
+                    <SortIcon
+                      field="category"
+                      sortField={sortField}
+                      sortDir={sortDir}
+                    />
+                  </th>
+
                   <th className="py-2 px-2 text-right">Tipo</th>
-                  <th className="py-2 px-2 text-right">Valor</th>
-                  <th className="py-2 px-2 text-right">Ações</th>
+
+                  <th
+                    onClick={() => handleSort("amount")}
+                    className="py-2 px-2 text-right cursor-pointer hover:text-zinc-100 select-none transition-colors"
+                  >
+                    Valor{" "}
+                    <SortIcon
+                      field="amount"
+                      sortField={sortField}
+                      sortDir={sortDir}
+                    />
+                  </th>
                 </tr>
               </thead>
               <tbody>
-                {filteredTransactions.map((t) => (
+                {sortedTransactions.map((t) => (
                   <tr
                     key={t.id}
                     className="border-b border-zinc-800/60 hover:bg-zinc-800/40 transition-colors"
