@@ -315,7 +315,7 @@ export default function Dashboard() {
 
         {/* Gráficos */}
         <div className="space-y-4 lg:grid lg:grid-cols-2 lg:gap-6 lg:space-y-0">
-          {/* Barras por mês */}
+          {/* Gráfico em barras por mês */}
           <div
             className="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-4 h-72 lg:h-80
            hover:scale-[1.02] transition-transform hover:border-violet-500/40 hover:shadow-violet-400/50 hover:shadow-lg"
@@ -370,7 +370,7 @@ export default function Dashboard() {
             </ResponsiveContainer>
           </div>
 
-          {/* Pizza por categoria */}
+          {/* Gráfico em pizza por categoria */}
           <div className="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-4 h-72 lg:h-80 hover:scale-[1.02] transition-transform hover:border-violet-500/40 hover:shadow-violet-400/50 hover:shadow-lg">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-xs font-medium text-zinc-200 uppercase tracking-wide">
